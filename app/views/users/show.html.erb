@@ -1,3 +1,37 @@
-<h3>User Profile</h3>
-<p>Name: <%= @user.name %></p>
-<p>Email: <%= @user.email if @user.email %></p>
+<div id="page_user_show">
+  <h2 class="title">User Profile</h2>
+  <div class="profile">
+    <div class="image">
+      <%= image_tag(@user.profile_image_url, width: 250, height: 250) %>
+    </div>
+    <div class="detail">
+      <dl>
+        <div>
+          <dt>Name</dt>
+          <dd><%= @user.name %></dd>
+        </div>
+        <div>
+          <dt>Email</dt>
+          <dd><%= @user.email %></dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+  <div class="graph">
+    グラフ表示
+  </div>
+  <div class="latest-post">
+    <ul>
+      <%- if @user.posts.count > 0 -%>
+        <%- @user.posts.each do |p| -%>
+          <li>
+            <h3 class="title"><%= link_to(p.title, p) %></h3>
+            <div class="body"><%= p.body %></div>
+          </li> 
+        <%- end -%>
+      <%- else -%>
+        <p class="attention">hoge doesn’t have any public post</p>
+      <%- end -%>
+    </ul>
+  </div>
+</div>

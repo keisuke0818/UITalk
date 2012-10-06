@@ -3,6 +3,10 @@
 require 'spec_helper'
 
 describe User do
+  before :each do
+    User.any_instance.stubs(:save_profile_image!)
+  end
+
   # TODO omniauthからの値のテストも必要あり
   describe '.name' do
     it 'は、重複する場合は保存しない。' do
@@ -114,5 +118,36 @@ describe User do
   describe '#include_by_provider_list' do
     subject { FactoryGirl.build(:user_with_twitter) }
     it { should be_true }
+  end
+
+  context '画像の保存に失敗した時、' do
+    describe '#save' do
+      let (:rails_mock) { mock("Rails") }
+      let (:logger_mock) { mock("Rails.logger") }
+      let (:user) { FactoryGirl.build(:user) }
+
+      before :all do
+        user.stubs(:save_profile_image!).raises
+        rails_mock.stubs(:logger).returns(logger_mock)
+      end
+
+      it 'は、ロールバックする。' do
+        user.save.should eq(nil)
+        lambda { User.find(user.id) }.should raise_error(ActiveRecord::RecordNotFound)
+      end
+
+      it 'logger#errorが、呼ばれる。' do
+        user.save
+        rails_mock.logger.expects(:error)
+      end
+    end
+    describe '#save' do
+      it 'は、ロールバックする。' do
+        user = FactoryGirl.build(:user)
+        user.stubs(:save_profile_image!).raises
+        lambda { user.save! }.should raise_error(ActiveRecord::RecordNotSaved)
+        lambda { User.find(user.id) }.should raise_error(ActiveRecord::RecordNotFound)
+      end
+    end
   end
 end

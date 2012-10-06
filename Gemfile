@@ -20,10 +20,12 @@ group :assets do
   gem 'uglifier', '>= 1.0.3'
 end
 
+gem 'normalize-rails'
 gem 'jquery-rails'
 gem "omniauth-twitter"
 gem "twitter"
 gem 'bcrypt-ruby'
+gem 'uuidtools'
 
 group :development do
   gem 'rails-erd'
@@ -35,6 +37,7 @@ group :test, :development do
   gem 'pry-nav'
   gem 'hirb'
   gem 'rspec-rails', ">= 2.8.1"
+  gem 'rails-sh'
 end
 
 group :test do
@@ -42,6 +45,7 @@ group :test do
   gem 'database_cleaner', ">= 0.7.1"
   gem 'cucumber-rails', ">= 1.2.1", :require => false
   gem 'capybara', ">= 1.1.2"
+  gem 'rspec-rails-mocha', :require => false
   gem "factory_girl_rails", ">= 1.6.0", :require => false
   # Code coverage for Ruby 1.9
   gem 'simplecov', :require => false
