@@ -1,16 +1,17 @@
-<div id="main">
-  <%= form_for(:post) do |p| %>
-    <div id="title_text_field">
-      <%= p.text_field :title %>
-    </div>
-    <div id="body_text_area">
-      <%= p.text_area :body %>
-    </div>
-    <div class="image_file_field"
-      <%= p.file_field :image %>
-    </div>
-    <%= p.submit %>
-  <% end %>
+keyword serch
+<%=form_for :post,:method => "GET" do |f| %>
+  <div id="search_text_field"><%= f.text_field :search %></div>
+  <%= f.button :submit %>
+<% end %>
+<br/>
+
+posts
+<%= form_for(:post) do |p| %>
+  <div id="title_text_field"><%= p.text_field :title %></div>
+  <div id="body_text_area"><%= p.text_area :body %></div>
+  <div id="image_file_field"><%= p.file_field :image %></div>
+  <%= p.submit %>
+<% end %>
 
   <div id="post_set">
     <% @posts.each do |p| %>

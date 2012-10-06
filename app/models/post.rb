@@ -7,10 +7,11 @@ class Post < ActiveRecord::Base
   accepts_nested_attributes_for :comments
 
   attr_accessible :user_id, :title, :body
-
-  scope :recent, lambda { |n| limit(n).order('created_at DESC, id DESC') }
-
-  module ImageMethods
+  
+  scope :recent, lambda { |n| order('created_at DESC').limit(n) }
+  scope :keyword_match, lambda { |keyword| where(['body LIKE ? ', "%#{keyword}%" ]) }
+ 
+ module ImageMethods
     def image_path
       "#{Rails.root}/public/uploaded/#{self.id.to_s}.png"
     end
@@ -27,5 +28,9 @@ class Post < ActiveRecord::Base
     post.save
     post.set_image(image)
     post
+  end
+  
+  def countable
+  #    [ 'good_count', 'bad_count' ]
   end
 end
