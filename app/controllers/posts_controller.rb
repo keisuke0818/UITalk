@@ -6,15 +6,18 @@ class PostsController < ApplicationController
 #binding.pry
     if params[:post] != nil && defined?(params[:post][:search])
       @posts = Post.keyword_match(params[:post][:search]).recent(40)
+    elsif params[:tag] != nil && defined?(params[:tag])
+      @posts = Post.tag_join.tag_match(params[:tag])
+    elsif params[:sort] != nil && params[:sort] == 'evaluation'
+      @posts = Post.evaluation()
     else
       @posts = Post.recent(40)
     end
-
   end
 
   def show
     @post = Post.find(params[:id])
-    @comment = @post.comment.build
+    @comment = @post.comments.build
   end
 
   def create
@@ -30,7 +33,19 @@ class PostsController < ApplicationController
   end
 
   def remove
-    
+    post = Post.find(params[:id])
+    #params[:ddproduct][:available] = false;
+    #product.update_attributes(params[:product]);
+  end
+
+  def destroy
+    @post = Post.find(params[:id])
+    @post.destroy
+
+    respond_to do |format|
+      format.html { redirect_to posts_url }
+      format.json { head :no_content }
+    end
   end
 
 end

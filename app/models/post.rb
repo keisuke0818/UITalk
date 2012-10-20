@@ -5,6 +5,9 @@ class Post < ActiveRecord::Base
   has_many :comments
   has_many :posts_tags
   has_many :tags, :through => :posts_tags
+  has_many :post_evaluations
+  has_many :posts_tags
+  has_many :tags
 
   accepts_nested_attributes_for :comments
 
@@ -12,8 +15,17 @@ class Post < ActiveRecord::Base
   
   scope :recent, lambda { |n| order('created_at DESC').limit(n) }
   scope :keyword_match, lambda { |keyword| where(['body LIKE ? ', "%#{keyword}%" ]) }
- 
- module ImageMethods
+  scope :evaluation, joins('LEFT JOIN post_evaluations ON post_evaluations.post_id = posts.id').
+                  select('posts.*, count(post_evaluations.id) as evaluation_count').
+                  group('posts.id').
+                  order('evaluation_count desc')
+  
+  scope :tag_match, lambda { |tag| where(['tags.name LIKE ? ', "#{tag}" ]) }
+  
+  scope :tag_join, joins(:posts_tags).
+                  select('posts.*')
+
+  module ImageMethods
     def image_path
       "#{Rails.root}/public/uploaded/#{self.id.to_s}.png"
     end

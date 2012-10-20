@@ -4,6 +4,8 @@ keyword serch
   <%= f.button :submit %>
 <% end %>
 <br/>
+<%= link_to '評価順', 'posts?sort=evaluation' %>
+<br/>
 
 <div id="post_index">
   <div class="form">
@@ -21,7 +23,7 @@ keyword serch
       <h2><%= link_to p.title, p %></h2>
       <p><%= p.body %></p>
       <p><%= image_tag "/uploaded/#{p.id.to_s}.png" %></p>
-    </div>
+      <%= link_to "削除",p, :confirm => "本当に削除しますか?", :method => :delete %>
     <% end %>
   </div>
 
